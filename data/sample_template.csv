@@ -1,0 +1,4 @@
+layer_height,nozzle_temperature,print_speed,infill_density,material_type,tensile_strength
+0.18,215,50,80,PLA,32.4
+0.20,230,45,85,PETG,34.2
+0.16,225,60,70,ABS,28.9
