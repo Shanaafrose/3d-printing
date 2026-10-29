@@ -37,20 +37,28 @@ def plot_tensile_vs_parameter(
 ) -> go.Figure:
     """Create a scatter plot of tensile strength vs selected parameter."""
 
-    required_columns = [parameter, "tensile_strength", "material_type"]
+    plot_df = df.copy()
+
+    # Support both material column names
+    if "material_type" not in plot_df.columns and "material" in plot_df.columns:
+        plot_df["material_type"] = plot_df["material"]
+
+    required_columns = [
+        parameter,
+        "tensile_strength",
+        "material_type"
+    ]
 
     missing_columns = [
         col for col in required_columns
-        if col not in df.columns
+        if col not in plot_df.columns
     ]
 
     if missing_columns:
         raise ValueError(
             f"Missing columns for plotting: {missing_columns}. "
-            f"Available columns: {list(df.columns)}"
+            f"Available columns: {list(plot_df.columns)}"
         )
-
-    plot_df = df[required_columns].copy()
 
     plot_df[parameter] = pd.to_numeric(
         plot_df[parameter], errors="coerce"
@@ -65,9 +73,7 @@ def plot_tensile_vs_parameter(
     )
 
     if plot_df.empty:
-        raise ValueError(
-            "No valid numeric data is available for this plot."
-        )
+        raise ValueError("No valid data is available for this plot.")
 
     fig = px.scatter(
         plot_df,
@@ -78,12 +84,11 @@ def plot_tensile_vs_parameter(
         labels={
             parameter: f"{parameter} ({_unit_for(parameter)})",
             "tensile_strength": "Tensile strength (MPa)",
-            "material_type": "Material Type",
+            "material_type": "Material",
         },
     )
 
     return fig
-
 
 def _unit_for(parameter: str) -> str:
     """Map parameter names to units for chart labels."""
