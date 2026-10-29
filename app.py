@@ -25,6 +25,7 @@ from config import (
     validate_layer_height,
 )
 from src.data_processing import DataError, apply_column_mapping, load_csv, validate_and_clean
+# Import data processing functions
 from src.demo_data import generate_demo_data
 from src.model_training import fit_random_forest_model, get_importance_chart_data, model_overfitting_warning, predict_with_model
 from src.report import generate_html_report
