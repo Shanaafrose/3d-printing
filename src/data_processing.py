@@ -16,6 +16,7 @@ import pandas as pd
 
 from config import (
     COLUMN_ALIASES,
+    LAYER_HEIGHT,
     MATERIAL_LIMITS,
     MIN_ROWS_HARD,
     MIN_ROWS_RECOMMENDED,
