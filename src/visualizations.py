@@ -30,24 +30,58 @@ def plot_histogram(df: pd.DataFrame, title: str) -> go.Figure:
     return fig
 
 
-def plot_tensile_vs_parameter(df: pd.DataFrame, parameter: str, title: str) -> go.Figure:
+def plot_tensile_vs_parameter(
+    df: pd.DataFrame,
+    parameter: str,
+    title: str
+) -> go.Figure:
     """Create a scatter plot of tensile strength vs selected parameter."""
+
+    required_columns = [parameter, "tensile_strength", "material_type"]
+
+    missing_columns = [
+        col for col in required_columns
+        if col not in df.columns
+    ]
+
+    if missing_columns:
+        raise ValueError(
+            f"Missing columns for plotting: {missing_columns}. "
+            f"Available columns: {list(df.columns)}"
+        )
+
+    plot_df = df[required_columns].copy()
+
+    plot_df[parameter] = pd.to_numeric(
+        plot_df[parameter], errors="coerce"
+    )
+
+    plot_df["tensile_strength"] = pd.to_numeric(
+        plot_df["tensile_strength"], errors="coerce"
+    )
+
+    plot_df = plot_df.dropna(
+        subset=[parameter, "tensile_strength", "material_type"]
+    )
+
+    if plot_df.empty:
+        raise ValueError(
+            "No valid numeric data is available for this plot."
+        )
+
     fig = px.scatter(
-        df,
+        plot_df,
         x=parameter,
         y="tensile_strength",
         color="material_type",
         title=title,
-        labels={parameter: f"{parameter} ({_unit_for(parameter)})", "tensile_strength": "Tensile strength (MPa)"},
+        labels={
+            parameter: f"{parameter} ({_unit_for(parameter)})",
+            "tensile_strength": "Tensile strength (MPa)",
+            "material_type": "Material Type",
+        },
     )
-    fig.update_layout(
-        template="plotly_white",
-        plot_bgcolor="white",
-        paper_bgcolor="white",
-        title_x=0.5,
-        font=dict(size=12),
-        legend_title_text="Material",
-    )
+
     return fig
 
 
