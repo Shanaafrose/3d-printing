@@ -544,8 +544,12 @@ def render_results_page() -> None:
     }])
     csv_path = PROJECT_ROOT / "reports" / "latest_prediction.csv"
     export_df.to_csv(csv_path, index=False)
-    st.download_button("Download results CSV", data=export_df.to_csv(index=False).encode("utf-8"), file_name="results.csv", mime="text/csv")
-
+    st.download_button(
+    "Download results CSV",
+    data=csv_data,
+    file_name="results.csv",
+    mime="text/csv",
+)
     if optimization is not None:
         html_path = PROJECT_ROOT / "reports" / "project_report.html"
         generate_html_report(
