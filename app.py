@@ -542,9 +542,9 @@ def render_results_page() -> None:
         "material_type": prediction["material_type"],
         "predicted_tensile_strength": prediction["predicted_strength"],
     }])
-        csv_path = PROJECT_ROOT / "reports" / "latest_prediction.csv"
-        csv_path.parent.mkdir(parents=True, exist_ok=True)
-        csv_data = export_df.to_csv(index=False).encode("utf-8")
+    csv_path = PROJECT_ROOT / "reports" / "latest_prediction.csv"
+    csv_path.parent.mkdir(parents=True, exist_ok=True)
+    csv_data = export_df.to_csv(index=False).encode("utf-8")
 
     st.download_button(
             "Download results CSV",
